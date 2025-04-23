@@ -1,0 +1,83 @@
+[consumers]
+name = "consumer"
+renames = [
+    ["Activities", "consumer"],
+    ["UoA", "unit"],
+    ["[type].1", "consumer_type"],
+]
+# TODO: handle NA
+
+[consumers.excel]
+sheet_name = "Activities"
+index_col = [0, 1, 9]		# or single value
+header = 7			# or list
+usecols = "A:I,L"
+
+[consumers.unpivot]
+var_name = "milestone_year"	# or list
+ignore_index = false
+
+[technology_metadata]
+name = "technology_metadata"
+
+[technology_metadata.excel]
+sheet_name = "Technologies"
+index_col = 0
+header = 2
+skiprows = [3, 4, 5]
+usecols = "A:H"
+
+[[technologies]]
+name = "default"
+renames = [
+    ["", "tech_id"]
+]
+unpivot_has_dupes = true
+unpivot_var_type = 'int'
+
+[technologies.excel]
+sheet_name = "Technologies"
+index_col = 0
+header = 3
+skiprows = [4, 5]
+
+[[technologies]]
+name = "investment_cost"
+
+[technologies.excel]
+usecols = "A,I:O"
+
+[technologies.unpivot]
+var_name = "milestone_year"
+ignore_index = false
+
+[[technologies]]
+name = "fixed_cost"
+
+[technologies.excel]
+usecols = "A,Q:W"
+
+[technologies.unpivot]
+var_name = "milestone_year"
+ignore_index = false
+
+[[technologies]]
+name = "variable_cost"
+
+[technologies.excel]
+usecols = "A,X:AD"
+
+[technologies.unpivot]
+var_name = "milestone_year"
+ignore_index = false
+
+# [[technologies]]
+# name = "dummy"
+
+# [technologies.excel]
+# index_col = []
+# usecols = "X:AD"
+
+# [technologies.unpivot]
+# var_name = "milestone_year"
+# ignore_index = false
