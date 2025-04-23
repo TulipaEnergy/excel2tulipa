@@ -3,6 +3,7 @@
 from dataclasses import asdict
 from pathlib import Path
 
+import duckdb
 import pandas as pd
 
 from .config import Section
@@ -33,3 +34,15 @@ def read_section(fname: str | Path, opts: Section) -> pd.DataFrame:
             .rename({"value": opts.name}, axis=1)
         )
     return df
+
+
+def combine_sections(
+    dbfile: str | Path, tblname: str, fname: str | Path, opts: list[Section]
+):
+    """Combine sections into a multicolumn table."""
+    df = pd.concat(
+        [read_section(fname, option) for option in opts], axis=1
+    ).reset_index()
+    with duckdb.connect(dbfile) as con:
+        con.register("df", df)
+        con.sql(f"CREATE TABLE {tblname} AS SELECT * FROM df")
