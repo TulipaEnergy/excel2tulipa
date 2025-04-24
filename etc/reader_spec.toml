@@ -1,5 +1,5 @@
 [consumers]
-name = "consumer"
+name = "demand"
 renames = [
     ["Activities", "consumer"],
     ["UoA", "unit"],
