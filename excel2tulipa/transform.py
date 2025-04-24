@@ -36,13 +36,17 @@ def read_section(fname: str | Path, opts: Section) -> pd.DataFrame:
     return df
 
 
-def combine_sections(
-    dbfile: str | Path, tblname: str, fname: str | Path, opts: list[Section]
-):
+def combine_sections(fname: str | Path, opts: list[Section]) -> pd.DataFrame:
     """Combine sections into a multicolumn table."""
     df = pd.concat(
         [read_section(fname, option) for option in opts], axis=1
     ).reset_index()
+    return df
+
+
+def dfs_to_db(dfs: dict[str, pd.DataFrame], dbfile: str):
+    """Write dataframe to DuckDB database file."""
     with duckdb.connect(dbfile) as con:
-        con.register("df", df)
-        con.sql(f"CREATE TABLE {tblname} AS SELECT * FROM df")
+        for tblname, df in dfs.items():
+            con.register("df", df)
+            con.sql(f"CREATE TABLE {tblname} AS SELECT * FROM df")
